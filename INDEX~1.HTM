@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0F172A" />
+<title>الأمد — مختبر الكيمياء الافتراضي | AmadXR Chemistry Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --space:#0F172A; --space2:#0B1220; --purple:#7C3AED; --gold:#F59E0B; --cyan:#22D3EE;
+    --ink:#EAF0FF; --muted:#9FB0CC; --card:#121B34; --card-line:rgba(255,255,255,.10);
+    --ar:'Tajawal',system-ui,sans-serif; --en:'Exo 2',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:
+      radial-gradient(1100px 600px at 15% -10%, rgba(124,58,237,.35), transparent 60%),
+      radial-gradient(900px 500px at 105% 10%, rgba(34,211,238,.25), transparent 55%),
+      radial-gradient(800px 700px at 50% 120%, rgba(245,158,11,.15), transparent 60%),
+      var(--space2);
+    color:var(--ink);
+    font-family:var(--ar);
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+  body.lang-en{ font-family:var(--en); direction:ltr; }
+
+  .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .particles span{
+    position:absolute; bottom:-60px; font-size:26px; opacity:.16;
+    animation:float-up linear infinite;
+    filter:drop-shadow(0 0 8px rgba(124,58,237,.5));
+  }
+  @keyframes float-up{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0; }
+    10%{ opacity:.18; }
+    90%{ opacity:.14; }
+    100%{ transform:translateY(-115vh) rotate(30deg); opacity:0; }
+  }
+
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:28px 24px 64px;}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand .logo{
+    width:42px;height:42px;border-radius:12px;
+    background:conic-gradient(from 180deg, var(--purple), var(--cyan), var(--gold), var(--purple));
+    box-shadow:0 0 0 1px rgba(255,255,255,.18), 0 6px 18px rgba(124,58,237,.4);
+  }
+  .brand .name{font-weight:900;font-size:18px;letter-spacing:.2px;}
+  .brand .tag{font-size:12px;color:var(--muted);}
+  .lang-toggle{
+    display:flex;background:rgba(255,255,255,.06);border:1px solid var(--card-line);
+    border-radius:999px;padding:4px;gap:2px;
+  }
+  .lang-toggle button{
+    border:0;background:transparent;color:var(--muted);font-family:inherit;font-weight:800;
+    font-size:12px;padding:7px 14px;border-radius:999px;cursor:pointer;transition:.18s;
+  }
+  .lang-toggle button.active{background:var(--purple);color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.5);}
+
+  .hero{text-align:center;padding:56px 10px 40px;}
+  .hero .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--cyan);
+    background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.35);
+    padding:7px 16px;border-radius:999px;margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(28px,4.4vw,46px);font-weight:900;margin:0 0 14px;line-height:1.25;
+    background:linear-gradient(90deg,#fff,var(--cyan) 55%,var(--gold));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero p.q{
+    font-size:clamp(16px,2vw,20px);color:var(--ink);opacity:.92;font-weight:700;max-width:640px;margin:0 auto 6px;
+  }
+  .hero p.sub{color:var(--muted);font-size:14px;max-width:560px;margin:8px auto 0;line-height:1.8;}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:36px;
+  }
+  @media(max-width:920px){ .grid{grid-template-columns:1fr;max-width:480px;margin-inline:auto;} }
+
+  .card{
+    position:relative;background:linear-gradient(180deg, var(--card), #0E1730);
+    border:1px solid var(--card-line);border-radius:20px;padding:28px 24px 24px;
+    display:flex;flex-direction:column;gap:14px;text-align:start;
+    cursor:pointer;overflow:hidden;isolation:isolate;
+    transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, border-color .28s ease;
+    text-decoration:none;color:inherit;
+  }
+  .card::before{
+    content:"";position:absolute;inset:-2px;z-index:-1;border-radius:22px;opacity:0;
+    background:linear-gradient(135deg,var(--accent,var(--purple)),transparent 60%);
+    transition:opacity .28s ease;
+  }
+  .card:hover{ transform:translateY(-8px) scale(1.015); border-color:rgba(255,255,255,.24);
+    box-shadow:0 20px 46px -14px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06) inset; }
+  .card:hover::before{ opacity:.35; }
+  .card:active{ transform:translateY(-4px) scale(1.005); }
+
+  .card .icon-wrap{
+    width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    font-size:32px;background:radial-gradient(circle at 35% 30%, rgba(124,58,237,.35), rgba(255,255,255,.04));
+    border:1px solid var(--card-line);
+  }
+  .card.c2 .icon-wrap{ background:radial-gradient(circle at 35% 30%, rgba(34,211,238,.35), rgba(255,255,255,.04)); }
+  .card.c3 .icon-wrap{ background:radial-gradient(circle at 35% 30%, rgba(245,158,11,.35), rgba(255,255,255,.04)); }
+  .card .num{
+    position:absolute;top:18px;right:20px;font-size:12px;font-weight:900;color:var(--muted);
+    letter-spacing:1px;
+  }
+  .card h3{margin:0;font-size:19px;font-weight:900;line-height:1.4;}
+  .card h3 .en{display:block;font-family:var(--en);font-size:12px;font-weight:600;color:var(--muted);margin-top:3px;}
+  .card p.desc{margin:0;color:var(--muted);font-size:13.5px;line-height:1.9;flex:1;}
+  .card .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px;}
+  .card .chip{
+    font-size:11px;font-weight:700;color:var(--ink);background:rgba(255,255,255,.06);
+    border:1px solid var(--card-line);padding:4px 10px;border-radius:999px;
+  }
+  .card .go{
+    margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:11px 16px;border-radius:12px;font-weight:800;font-size:14px;
+    background:var(--accent,var(--purple));color:#fff;
+    box-shadow:0 8px 20px -8px rgba(124,58,237,.6);
+    transition:filter .18s ease;
+  }
+  .card:hover .go{ filter:brightness(1.12); }
+  .card .go .arrow{transition:transform .25s ease;display:inline-block;}
+  .card:hover .go .arrow{ transform:translateX(-4px); }
+  body.lang-en .card:hover .go .arrow{ transform:translateX(4px); }
+
+  .card.c1{ --accent:#7C3AED; }
+  .card.c2{ --accent:#22D3EE; }
+  .card.c3{ --accent:#F59E0B; }
+
+  .foot{
+    margin-top:56px;text-align:center;color:var(--muted);font-size:12.5px;
+    display:flex;flex-direction:column;gap:6px;align-items:center;
+  }
+  .foot .badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+  .foot .badge{
+    font-size:11px;padding:5px 11px;border-radius:999px;border:1px solid var(--card-line);
+    background:rgba(255,255,255,.04);
+  }
+
+  body.lang-en [data-ar]{ display:none; }
+  body:not(.lang-en) [data-en]{ display:none; }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <div class="name">الأمد <span style="opacity:.5;font-weight:600;">· AmadXR</span></div>
+        <div class="tag"><span data-ar="حيث تُلمس الأفكار">حيث تُلمس الأفكار</span><span data-en="Where Ideas Become Tangible">Where Ideas Become Tangible</span></div>
+      </div>
+    </div>
+    <div class="lang-toggle">
+      <button id="btn-ar" class="active">عربي</button>
+      <button id="btn-en">English</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">🧫 <span data-ar="مختبر الكيمياء الافتراضي">مختبر الكيمياء الافتراضي</span><span data-en="Virtual Chemistry Lab">Virtual Chemistry Lab</span></div>
+    <h1><span data-ar="مرحباً بك في مختبر الأمد الغامر">مرحباً بك في مختبر الأمد الغامر</span><span data-en="Welcome to the Al-Amad Immersive Lab">Welcome to the Al-Amad Immersive Lab</span></h1>
+    <p class="q"><span data-ar="ما التجربة التي تودّ استكشافها؟">ما التجربة التي تودّ استكشافها؟</span><span data-en="What experiment would you like to explore?">What experiment would you like to explore?</span></p>
+    <p class="sub">
+      <span data-ar="اختر إحدى التجارب الثلاث أدناه لبدء رحلتك التفاعلية — متاحة على الشاشة وعلى نظارات الواقع الافتراضي (Meta Quest) بتقنية WebXR.">اختر إحدى التجارب الثلاث أدناه لبدء رحلتك التفاعلية — متاحة على الشاشة وعلى نظارات الواقع الافتراضي (Meta Quest) بتقنية WebXR.</span>
+      <span data-en="Pick one of the three experiments below to begin your interactive journey — available on desktop and on Meta Quest VR headsets via WebXR.">Pick one of the three experiments below to begin your interactive journey — available on desktop and on Meta Quest VR headsets via WebXR.</span>
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <a class="card c1" href="acids-bases.html">
+      <span class="num">01</span>
+      <div class="icon-wrap">🧪</div>
+      <h3>
+        <span data-ar="قوة الأحماض والقواعد">قوة الأحماض والقواعد</span><span data-en="The Strength of Acids and Bases">The Strength of Acids and Bases</span>
+      </h3>
+      <p class="desc">
+        <span data-ar="تجربة غامرة من أربعة مشاهد: استكشاف التوصيل الكهربائي، والمنظر المجهري للتأيّن، وتحدّي التصنيف بين القوي والضعيف، والتقييم الختامي مع شهادة رقمية.">تجربة غامرة من أربعة مشاهد: استكشاف التوصيل الكهربائي، والمنظر المجهري للتأيّن، وتحدّي التصنيف بين القوي والضعيف، والتقييم الختامي مع شهادة رقمية.</span>
+        <span data-en="A four-scene immersive experience: conductivity exploration, the microscopic view of ionization, a strong/weak classification challenge, and a final assessment with a digital certificate.">A four-scene immersive experience: conductivity exploration, the microscopic view of ionization, a strong/weak classification challenge, and a final assessment with a digital certificate.</span>
+      </p>
+      <div class="meta">
+        <span class="chip"><span data-ar="4 مشاهد">4 مشاهد</span><span data-en="4 scenes">4 scenes</span></span>
+        <span class="chip"><span data-ar="~16 دقيقة">~16 دقيقة</span><span data-en="~16 min">~16 min</span></span>
+        <span class="chip">🥽 WebXR</span>
+      </div>
+      <div class="go">
+        <span><span data-ar="ابدأ التجربة">ابدأ التجربة</span><span data-en="Start Experiment">Start Experiment</span></span>
+        <span class="arrow">←</span>
+      </div>
+    </a>
+
+    <a class="card c2" href="reagents.html">
+      <span class="num">02</span>
+      <div class="icon-wrap">⚗️</div>
+      <h3>
+        <span data-ar="كاشف الألوان">كاشف الألوان</span><span data-en="Color Reagents">Color Reagents</span>
+      </h3>
+      <p class="desc">
+        <span data-ar="خمسة مشاهد تفاعلية لاكتشاف الكاشف الكيميائي، وتمييز الأحماض من القواعد عبر تغيّر الألوان في مواد يومية مألوفة.">خمسة مشاهد تفاعلية لاكتشاف الكاشف الكيميائي، وتمييز الأحماض من القواعد عبر تغيّر الألوان في مواد يومية مألوفة.</span>
+        <span data-en="Five interactive scenes exploring a chemical indicator, distinguishing acids from bases through color change in familiar everyday substances.">Five interactive scenes exploring a chemical indicator, distinguishing acids from bases through color change in familiar everyday substances.</span>
+      </p>
+      <div class="meta">
+        <span class="chip"><span data-ar="5 مشاهد">5 مشاهد</span><span data-en="5 scenes">5 scenes</span></span>
+        <span class="chip"><span data-ar="~28 دقيقة">~28 دقيقة</span><span data-en="~28 min">~28 min</span></span>
+        <span class="chip">🥽 WebXR</span>
+      </div>
+      <div class="go">
+        <span><span data-ar="ابدأ التجربة">ابدأ التجربة</span><span data-en="Start Experiment">Start Experiment</span></span>
+        <span class="arrow">←</span>
+      </div>
+    </a>
+
+    <a class="card c3" href="periodic-table.html">
+      <span class="num">03</span>
+      <div class="icon-wrap">🔬</div>
+      <h3>
+        <span data-ar="مختبر الجدول الدوري الغامر">مختبر الجدول الدوري الغامر</span><span data-en="Immersive Periodic Table Lab">Immersive Periodic Table Lab</span>
+      </h3>
+      <p class="desc">
+        <span data-ar="استكشف 54 عنصراً في شبكة ثلاثية الأبعاد، وقارن الاتجاهات الدورية، وأنجز تحديات الترتيب والكهروسالبية لنيل شهادة الإتقان.">استكشف 54 عنصراً في شبكة ثلاثية الأبعاد، وقارن الاتجاهات الدورية، وأنجز تحديات الترتيب والكهروسالبية لنيل شهادة الإتقان.</span>
+        <span data-en="Explore 54 elements in a 3D grid, compare periodic trends, and complete ordering and electronegativity challenges to earn a mastery certificate.">Explore 54 elements in a 3D grid, compare periodic trends, and complete ordering and electronegativity challenges to earn a mastery certificate.</span>
+      </p>
+      <div class="meta">
+        <span class="chip"><span data-ar="7 مشاهد">7 مشاهد</span><span data-en="7 scenes">7 scenes</span></span>
+        <span class="chip"><span data-ar="أيدٍ وكنترولر">أيدٍ وكنترولر</span><span data-en="Hands + controller">Hands + controller</span></span>
+        <span class="chip">🥽 WebXR</span>
+      </div>
+      <div class="go">
+        <span><span data-ar="ابدأ التجربة">ابدأ التجربة</span><span data-en="Start Experiment">Start Experiment</span></span>
+        <span class="arrow">←</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="foot">
+    <div class="badges">
+      <span class="badge"><span data-ar="🖥️ يعمل على الشاشة">🖥️ يعمل على الشاشة</span><span data-en="🖥️ Works on desktop">🖥️ Works on desktop</span></span>
+      <span class="badge"><span data-ar="🥽 يدعم Meta Quest عبر WebXR">🥽 يدعم Meta Quest عبر WebXR</span><span data-en="🥽 Meta Quest support via WebXR">🥽 Meta Quest support via WebXR</span></span>
+      <span class="badge"><span data-ar="🔄 عودة سهلة إلى القائمة من كل تجربة">🔄 عودة سهلة إلى القائمة من كل تجربة</span><span data-en="🔄 Easy return to menu from every experiment">🔄 Easy return to menu from every experiment</span></span>
+    </div>
+    <div>
+      <span data-ar="© الأمد — منظومة محاكاة كيميائية احترافية متكاملة">© الأمد — منظومة محاكاة كيميائية احترافية متكاملة</span>
+      <span data-en="© Al-Amad — Integrated Professional Chemistry Simulation System">© Al-Amad — Integrated Professional Chemistry Simulation System</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var btnAr = document.getElementById('btn-ar');
+  var btnEn = document.getElementById('btn-en');
+  function setLang(lang){
+    var html = document.documentElement;
+    var body = document.body;
+    if(lang === 'en'){
+      body.classList.add('lang-en');
+      html.setAttribute('lang','en');
+      html.setAttribute('dir','ltr');
+      btnEn.classList.add('active'); btnAr.classList.remove('active');
+    } else {
+      body.classList.remove('lang-en');
+      html.setAttribute('lang','ar');
+      html.setAttribute('dir','rtl');
+      btnAr.classList.add('active'); btnEn.classList.remove('active');
+    }
+    try{ localStorage.setItem('amadxr_lang', lang); }catch(e){}
+  }
+  btnAr.addEventListener('click', function(){ setLang('ar'); });
+  btnEn.addEventListener('click', function(){ setLang('en'); });
+  var saved = null;
+  try{ saved = localStorage.getItem('amadxr_lang'); }catch(e){}
+  if(saved) setLang(saved);
+
+  var icons = ['⚗️','🧪','🔬','⚛️','🧫','💧'];
+  var host = document.getElementById('particles');
+  var frag = document.createDocumentFragment();
+  for(var i=0;i<16;i++){
+    var s = document.createElement('span');
+    s.textContent = icons[i % icons.length];
+    s.style.left = (Math.random()*100) + 'vw';
+    s.style.animationDuration = (16 + Math.random()*14) + 's';
+    s.style.animationDelay = (Math.random()*-20) + 's';
+    s.style.fontSize = (18 + Math.random()*18) + 'px';
+    frag.appendChild(s);
+  }
+  host.appendChild(frag);
+})();
+</script>
+
+</body>
+</html>
